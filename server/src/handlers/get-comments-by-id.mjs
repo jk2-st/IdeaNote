@@ -2,7 +2,7 @@
 
 // Create a DocumentClient that represents the query to add an item
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, QueryCommand} from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
@@ -24,21 +24,25 @@ export const getCommentsById = async (event) => {
  
   // Get the item from the table
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property
-  var params = {
+  const params = {
+    TableName: tableName,
     IndexName : "comment_list",
-    Key: { relation_id: id},
+    KeyConditionExpression: 'relation_id = :id',
+    ExpressionAttributeValues: {
+      ':id': id
+    },
   };
 
   try {
-    const data = await ddbDocClient.send(new GetCommand(params));
-    var item = data.Item;
+    const data = await ddbDocClient.send(new QueryCommand(params));
+    var items = data.Items;
   } catch (err) {
     console.log("Error", err);
   }
  
   const response = {
     statusCode: 200,
-    body: JSON.stringify(item)
+    body: JSON.stringify(items)
   };
  
   // All log statements are written to CloudWatch
