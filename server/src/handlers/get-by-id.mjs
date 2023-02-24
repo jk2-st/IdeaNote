@@ -26,7 +26,7 @@ export const getByIdHandler = async (event) => {
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property
   var params = {
     TableName : tableName,
-    Key: { entity_id: id },
+    Key: { entity_id: id, relation_id: id},
   };
 
   try {
