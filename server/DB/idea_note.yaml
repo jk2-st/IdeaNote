@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  IdeaNoteDB:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "entity_id"
+          AttributeType: "S"
+        -
+          AttributeName: "relation_id"
+          AttributeType: "S"
+        -
+          AttributeName: "title"
+          AttributeType: "S"
+        -
+          AttributeName: "comment"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "entity_id"
+          KeyType: "HASH"
+        - 
+          AttributeName: "relation_id"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "IdeaNoteDB"
+      GlobalSecondaryIndexes: 
+        - 
+          IndexName: "theme_list"
+          KeySchema: 
+            - 
+              AttributeName: "entity_id"
+              KeyType: "HASH"
+            - 
+              AttributeName: "title"
+              KeyType: "RANGE"
+          Projection: 
+            ProjectionType: "KEYS_ONLY"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+        - 
+          IndexName: "comment_list"
+          KeySchema: 
+            - 
+              AttributeName: "relation_id"
+              KeyType: "HASH"
+            - 
+              AttributeName: "comment"
+              KeyType: "RANGE"
+          Projection: 
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
