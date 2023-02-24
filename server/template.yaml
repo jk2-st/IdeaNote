@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  IdeaNote server less application
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  VersionParam:
+    Type: String
+    Default: v1
+  StageNameParam:
+    Type: String
+    Default: prod
+  TableName:
+    Type: String
+    Default: IdeaNoteDB
+
+Resources:
+  # API declaration
+  IdeaNoteApi:
+    Type: AWS::Serverless::Api
+    MethodSettings: 
+        DataTraceEnabled: true
+        MetricsEnabled: true
+        HttpMethod: '*'
+        # ResourcePath: !Sub '${VersionParam}/*'
+        # LoggingLevel: INFO
+    Properties:
+      Name: IdeaNoteApi 
+      StageName: !Ref StageNameParam
+      TracingEnabled: true
+      Cors:
+        AllowOrigin: "'*'"
+        AllowMethods: "'OPTIONS,HEAD,GET,PUT,POST,DELETE'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+
+  getAllThemeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-all-theme.getAllIThemeHandler
+      Runtime: nodejs18.x
+      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the TableName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !Ref TableName
+      Events:
+        GetTheme:
+          Type: Api
+          Properties:
+            Path: /theme/
+            Method: GET
+            RestApiId: !Ref IdeaNoteApi
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  # This is a Lambda function config associated with the source code: get-by-id.js
+  getCommentsBythemeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-by-id.getByIdHandler
+      Runtime: nodejs18.x
+      Description: A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the TableName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !Ref TableName
+      Events:
+        GetComments:
+          Type: Api
+          Properties:
+            Path: /theme/{theme_id}
+            Method: GET
+            RestApiId: !Ref IdeaNoteApi
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  # This is a Lambda function config associated with the source code: put-item.js
+  postCommentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/put-item.putItemHandler
+      Runtime: nodejs18.x
+      Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the TableName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !Ref TableName
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /comment/
+            Method: POST
+            RestApiId: !Ref IdeaNoteApi
+
+
+# Outputs:
+  # WebEndpoint:
+    # Description: "API Gateway endpoint URL for Prod stage"
+    # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
