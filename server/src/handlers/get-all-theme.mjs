@@ -23,7 +23,7 @@ export const getAllThemeHandler = async (event) => {
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property
     // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
     var params = {
-        TableName : tableName
+        IndexName : "theme_list",
     };
 
     try {
