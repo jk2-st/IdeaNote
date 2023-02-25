@@ -20,7 +20,7 @@ export const getCommentsById = async (event) => {
   console.info('received:', event);
  
   // Get id from pathParameters from APIGateway because of `/{id}` at template.yaml
-  const id = event.pathParameters.theme_id;
+  const id = 'theme-' + event.pathParameters.theme_id;
  
   // Get the item from the table
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property

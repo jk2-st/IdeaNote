@@ -12,7 +12,7 @@ const tableName = process.env.SAMPLE_TABLE;
 /**
  * A simple example includes a HTTP post method to add one item to a DynamoDB table.
  */
-export const postCommentHandler = async (event) => {
+export const postThemeHandler = async (event) => {
     if (event.httpMethod !== 'POST') {
         throw new Error(`postMethod only accepts POST method, you tried: ${event.httpMethod} method.`);
     }
@@ -21,14 +21,13 @@ export const postCommentHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const theme_id = 'theme-' + body.theme_id;
-    const comment = body.comment;
+    const title = body.title;
 
     var atomic_params = {
         TableName: tableName,
         Key: {
-          entity_id : 'comment_counter',
-          relation_id : 'comment_counter'
+          entity_id : 'theme_counter',
+          relation_id : 'theme_counter'
         },
         UpdateExpression: 'SET #count = if_not_exists(#count, :ZERO) + :Increment',
         ExpressionAttributeNames: {
@@ -42,12 +41,12 @@ export const postCommentHandler = async (event) => {
     };
 
     try {
-        // CommentのIDをアトミックカウンターでオートインクリメントする
+        // ThemeのIDをアトミックカウンターでオートインクリメントする
         const atomic_counter = await ddbDocClient.send(new UpdateCommand(atomic_params));
-        const entity_id = 'comment-' + atomic_counter.Attributes.count;
+        const theme_id = 'theme-' + atomic_counter.Attributes.count;
         var params = {
             TableName : tableName,
-            Item: { entity_id : entity_id, relation_id: theme_id, comment: comment }
+            Item: { entity_id : theme_id, relation_id: theme_id, title: title }
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
