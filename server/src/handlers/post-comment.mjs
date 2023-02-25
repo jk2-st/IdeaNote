@@ -2,7 +2,7 @@
 
 // Create a DocumentClient that represents the query to add an item
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
@@ -12,7 +12,7 @@ const tableName = process.env.SAMPLE_TABLE;
 /**
  * A simple example includes a HTTP post method to add one item to a DynamoDB table.
  */
-export const putItemHandler = async (event) => {
+export const postCommentHandler = async (event) => {
     if (event.httpMethod !== 'POST') {
         throw new Error(`postMethod only accepts POST method, you tried: ${event.httpMethod} method.`);
     }
@@ -21,18 +21,34 @@ export const putItemHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const id = 'Comment-0001';
     const theme_id = body.theme_id;
     const comment = body.comment;
 
-    // Creates a new item, or replaces an old item with a new item
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
-    var params = {
-        TableName : tableName,
-        Item: { entity_id : id, relation_id: theme_id, comment: comment }
+    var atomic_params = {
+        TableName: tableName,
+        Key: {
+          entity_id : 'comment_counter',
+          relation_id : 'comment_counter'
+        },
+        UpdateExpression: 'SET #count = if_not_exists(#count, :ZERO) + :Increment',
+        ExpressionAttributeNames: {
+        '#count': 'count'
+        },
+        ExpressionAttributeValues: {
+          ':ZERO': 0,
+          ':Increment': 1
+        },
+        ReturnValues: 'UPDATED_NEW'
     };
 
     try {
+        // CommentのIDをアトミックカウンターでオートインクリメントする
+        const atomic_counter = await ddbDocClient.send(new UpdateCommand(atomic_params));
+        const entity_id = 'Comment-' + atomic_counter.Attributes.count;
+        var params = {
+            TableName : tableName,
+            Item: { entity_id : entity_id, relation_id: theme_id, comment: comment }
+        };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
       } catch (err) {

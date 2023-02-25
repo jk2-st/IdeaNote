@@ -38,7 +38,7 @@ Resources:
   getAllThemeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/get-all-theme.getAllIThemeHandler
+      Handler: src/handlers/get-all-theme.getAllThemeHandler
       Runtime: nodejs18.x
       Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
       Policies:
@@ -88,7 +88,7 @@ Resources:
   postCommentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/put-item.putItemHandler
+      Handler: src/handlers/post-comment.postCommentHandler
       Runtime: nodejs18.x
       Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
       Policies:
