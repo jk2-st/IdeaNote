@@ -35,7 +35,13 @@ export const getAllThemeHandler = async (event) => {
 
     const response = {
         statusCode: 200,
-        body: JSON.stringify(items)
+        body: JSON.stringify(items),
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "Content-Type,X-CSRF-TOKEN",
+        }
     };
 
     // All log statements are written to CloudWatch
