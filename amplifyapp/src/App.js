@@ -1,33 +1,61 @@
 import "@aws-amplify/ui-react/styles.css";
 import {
   withAuthenticator,
-  Button,
-  Heading,
+  // Button,
+  // Heading,
   Image,
   View,
   Card,
 } from "@aws-amplify/ui-react";
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, List, ListItem, Text } from '@chakra-ui/react';
+import { Box, Flex, List, Spacer, Heading, Button , ListItem, Text } from '@chakra-ui/react';
 
-const Sidebar = () => {
-  const [data, setData] = useState([]);
+const ThemeList = () => {
+  const [themes, setthemes] = useState([]);
+
+  useEffect(() => {
+    // APIリクエストを送信する処理
+    fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
+      .then(response => response.json())
+      .then(result => {
+        setthemes(result);
+      })
+      .catch(error => {
+        console.error('通信に失敗しました。', error);
+        setthemes([]);
+      });
+  }, []);
+
+    console.log('this is themes : ', themes);
+  return (
+    <Box bg="gray">
+      <List spacing={1}>
+        {themes.map(item => (
+          <ListItem key={item.entity_id}>
+            <Text>{item.title}</Text>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+};
+const CommentList = () => {
+  const [comments, setcomments] = useState([]);
 
   useEffect(() => {
     // APIリクエストを送信する処理
     fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
       .then(response => response.json())
       .then(result => {
-        console.log('data is : ' , result);
-        setData(result);
+        setcomments(result);
     });
   }, []);
 
-    console.log('this is data : ', data);
+    console.log('this is comments : ', comments);
   return (
-    <Box bg="gray.100" w={200} p={4}>
-      <List spacing={3}>
-        {data.map(item => (
+    <Box bg="gray">
+      <List spacing={1}>
+        {comments.map(item => (
           <ListItem key={item.entity_id}>
             <Text>{item.comment}</Text>
           </ListItem>
@@ -36,19 +64,16 @@ const Sidebar = () => {
     </Box>
   );
 };
-
 const MainContent = () => {
   return (
     <>
     <Flex
-      backgroundColor="gray.100"
+      backgroundColor="white"
       width="200px"
       height="100vh"
       flexDirection="column"
     >
-      <Text fontSize="lg" fontWeight="bold">コメント１</Text>
-      <Text fontSize="lg" fontWeight="bold">コメント２</Text>
-      <Text fontSize="lg" fontWeight="bold">なにも思いつかない</Text>
+      <CommentList />
     </Flex>
     </>
   );
@@ -56,19 +81,26 @@ const MainContent = () => {
 
 function App({ signOut }) {
   return (
-    // <View className="App">
-    //   <Card>
-    //     <Image src={logo} className="App-logo" alt="logo" />
-    //     <Heading level={1}>We now have Auth!</Heading>
-    //   </Card>
-    //   <Button onClick={signOut}>Sign Out</Button>
-    // </View>
     <>
-      <Button onClick={signOut}>Sign Out</Button>
-      <Flex>
-      <Sidebar />
-      <MainContent />
+      <Flex direction="column" height="100vh">
+      <Box bg="blue" color="white" p={4}>
+        <Flex alignItems="center">
+          <Heading size="md">My App</Heading>
+          <Spacer />
+          <Button onClick={signOut}>Sign Out</Button>
+        </Flex>
+      </Box>
+      <Flex height="calc(100% - 64px)">
+        <Box w="240px" bg="gray" p={4}>
+          <Heading size="sm">Navigation</Heading>
+          <ThemeList/>
+        </Box>
+        <Box flex="1" p={4}>
+          <Heading size="lg">Main Content</Heading>
+          <MainContent />
+        </Box>
       </Flex>
+    </Flex>
     </>
   );
 }
