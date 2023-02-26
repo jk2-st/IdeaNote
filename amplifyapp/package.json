@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "miragejs": "^0.1.47",
     "shell-quote": "^1.8.0"
   }
 }

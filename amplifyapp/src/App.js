@@ -9,13 +9,19 @@ import {
 } from "@aws-amplify/ui-react";
 import React, { useState, useEffect } from 'react';
 import { Box, Flex, List, Spacer, Heading, Button , ListItem, Text } from '@chakra-ui/react';
+import { createServer } from "miragejs"
+
+let server = createServer()
+server.get("/theme", [{ thme_id: "theme-1", title: "モックのタイトルです" }]);
+server.get("/theme/1", [{ entity_id: "comment-1", comment: "コメントのモック" }, { entity_id: "comment-2", comment: "コメントその２"}]);
 
 const ThemeList = () => {
   const [themes, setthemes] = useState([]);
 
   useEffect(() => {
     // APIリクエストを送信する処理
-    fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
+    // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
+    fetch('/theme')
       .then(response => response.json())
       .then(result => {
         setthemes(result);
@@ -44,7 +50,8 @@ const CommentList = () => {
 
   useEffect(() => {
     // APIリクエストを送信する処理
-    fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
+    // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
+    fetch('/theme/1')
       .then(response => response.json())
       .then(result => {
         setcomments(result);
