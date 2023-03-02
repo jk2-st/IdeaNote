@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Flex, List, Spacer, Heading, Button , ListItem, Text } from '@chakra-ui/react';
 import { createServer } from "miragejs";
 import ThemeComponent from "./components/ThemeComponent";
+import { useDispatch, useSelector } from 'react-redux';
 
 let server = createServer();
 server.get("/theme", [{ entity_id: "theme-1", title: "モックのタイトルです" }]);
@@ -48,7 +49,9 @@ const ThemeList = () => {
     </Box>
   );
 };
-const CommentList = () => {
+const CommentList = (comments) => {
+
+  console.log('レンダリング：comment', comments.comments);
   // useEffect(() => {
     // APIリクエストを送信する処理
     // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
@@ -63,16 +66,35 @@ const CommentList = () => {
   return (
     <Box bg="gray">
       <List spacing={1}>
-        {/* {comments.map(item => (
+        {comments.comments.map(item => (
           <ListItem key={item.entity_id}>
             <Text>{item.comment}</Text>
           </ListItem>
-        ))} */}
+        ))}
       </List>
     </Box>
   );
 };
 const MainContent = () => {
+  const theme_id = useSelector((state) => state.theme.theme_id);
+  const dispatch = useDispatch();
+  var comments = []; //[{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}];
+  console.log('them id :' , theme_id);
+
+  useEffect(() => {
+    if (theme_id == 0) return;
+    // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
+    console.log(` start requet theme Theme ID: ${theme_id}`);
+    // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
+    fetch('/theme/' + theme_id)
+      .then(response => response.json())
+      .then((result) => {
+        comments = result;
+        console.log('comments is ', comments);
+      });
+  }, [theme_id]);
+
+
   return (
     <>
     <Flex
@@ -81,7 +103,7 @@ const MainContent = () => {
       height="100vh"
       flexDirection="column"
     >
-      <CommentList />
+      <CommentList comments={comments}/>
     </Flex>
     </>
   );
@@ -90,7 +112,7 @@ const MainContent = () => {
 function App({ signOut }) {
   return (
     <>
-      {/* <Flex direction="column" height="100vh">
+      <Flex direction="column" height="100vh">
       <Box bg="blue" color="white" p={4}>
         <Flex alignItems="center">
           <Heading size="md">My App</Heading>
@@ -109,8 +131,7 @@ function App({ signOut }) {
         </Box>
         <ThemeComponent />
       </Flex>
-    </Flex> */}
-    <ThemeComponent />
+    </Flex>
     </>
   );
 }

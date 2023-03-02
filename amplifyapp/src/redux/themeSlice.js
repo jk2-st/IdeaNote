@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const themeSlice = createSlice({
   name: 'theme',
-  initialState: { theme_id: 0 },
+  initialState: { theme_id: 1 },
   reducers: {
     incrementThemeId: (state) => {
       state.theme_id += 1;
