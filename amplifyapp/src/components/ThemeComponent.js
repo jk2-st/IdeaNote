@@ -14,7 +14,7 @@ export default function ThemeComponent() {
   }, [id]);
 
   const handleClick = () => {
-    dispatch(incrementselectedThemeId());
+    dispatch(incrementselectedThemeId(id+1));
   };
 
   return (

@@ -64,10 +64,8 @@ const CommentList = () => {
   // }, []);
   const theme_id = useSelector((state) => state.selectedTheme.id);
   const dispatch = useDispatch();
-  const comment = useSelector((state) => state.comment);
   // var comments = []; //[{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}];
   console.log('them id :' , theme_id);
-  console.log('comments  :' , comment);
 
   useEffect(() => {
     if (theme_id == 0) return;
@@ -83,10 +81,10 @@ const CommentList = () => {
   }, [theme_id]);
 
 
+  const comment = useSelector((state) => state.comment);
   console.log('this is comments : ', comment);
   return (
     <Box bg="gray">
-      <Box key={theme_id} >bbbbb</Box>
       <List spacing={1}>
         {comment.map(item => (
           <ListItem key={item.entity_id}>
