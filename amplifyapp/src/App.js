@@ -12,6 +12,7 @@ import { Box, Flex, List, Spacer, Heading, Button , ListItem, Text } from '@chak
 import { createServer } from "miragejs";
 import ThemeComponent from "./components/ThemeComponent";
 import { useDispatch, useSelector } from 'react-redux';
+import { setComments } from "./redux/commentSlice";
 
 let server = createServer();
 server.get("/theme", [{ entity_id: "theme-1", title: "モックのタイトルです" }]);
@@ -19,39 +20,39 @@ server.get("/theme/1", [{ entity_id: "comment-1", comment: "コメントのモ�
 server.get("/theme/2", [{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}]);
 
 const ThemeList = () => {
-  // useEffect(() => {
+  var theme_list = [];
+  const theme_id = useSelector((state) => state.selectedTheme.id);
+  useEffect(() => {
     // APIリクエストを送信する処理
     // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
-  //   fetch('/theme')
-  //     .then(response => response.json())
-  //     .then(result => {
-  //       setthemes(result);
-  //     })
-  //     .catch(error => {
-  //       console.error('通信に失敗しました。', error);
-  //       setthemes([]);
-  //     });
-  // }, []);
+    fetch('/theme')
+      .then(response => response.json())
+      .then(result => {
+        theme_list = result;
+        console.log('theme list load', theme_list);
+      })
+      .catch(error => {
+        console.error('通信に失敗しました。', error);
+      });
+  }, []);
 
-  const fetchComment = (entity_id) => {
-    // const data = {theme_id: entity_id};
-    // dispatch(setData(data));
-  }
+  console.log('theme list ' , theme_list);
   return (
     <Box bg="gray">
+      <List >
+        <Box key={theme_id}>aaa</Box>
+      </List>
       <List spacing={1}>
-        {/* {themes.map(item => (
+        {theme_list.map(item => (
           <ListItem key={item.entity_id}>
-            <Button onClick={fetchComment(item.entity_id)}>{item.title}</Button>
+            <Button >{item.title}</Button>
           </ListItem>
-        ))} */}
+        ))}
       </List>
     </Box>
   );
 };
-const CommentList = (comments) => {
-
-  console.log('レンダリング：comment', comments.comments);
+const CommentList = () => {
   // useEffect(() => {
     // APIリクエストを送信する処理
     // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
@@ -61,25 +62,12 @@ const CommentList = (comments) => {
   //       setcomments(result);
   //   });
   // }, []);
-
-    // console.log('this is comments : ', comments);
-  return (
-    <Box bg="gray">
-      <List spacing={1}>
-        {comments.comments.map(item => (
-          <ListItem key={item.entity_id}>
-            <Text>{item.comment}</Text>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-};
-const MainContent = () => {
-  const theme_id = useSelector((state) => state.theme.theme_id);
+  const theme_id = useSelector((state) => state.selectedTheme.id);
   const dispatch = useDispatch();
-  var comments = []; //[{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}];
+  const comment = useSelector((state) => state.comment);
+  // var comments = []; //[{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}];
   console.log('them id :' , theme_id);
+  console.log('comments  :' , comment);
 
   useEffect(() => {
     if (theme_id == 0) return;
@@ -89,11 +77,27 @@ const MainContent = () => {
     fetch('/theme/' + theme_id)
       .then(response => response.json())
       .then((result) => {
-        comments = result;
-        console.log('comments is ', comments);
+        console.log("mainContaints ", result);
+        dispatch(setComments(result));
       });
   }, [theme_id]);
 
+
+  console.log('this is comments : ', comment);
+  return (
+    <Box bg="gray">
+      <Box key={theme_id} >bbbbb</Box>
+      <List spacing={1}>
+        {comment.map(item => (
+          <ListItem key={item.entity_id}>
+            <Text>{item.comment}</Text>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+};
+const MainContent = () => {
 
   return (
     <>
@@ -103,7 +107,7 @@ const MainContent = () => {
       height="100vh"
       flexDirection="column"
     >
-      <CommentList comments={comments}/>
+      <CommentList />
     </Flex>
     </>
   );
@@ -123,7 +127,7 @@ function App({ signOut }) {
       <Flex height="calc(100% - 64px)">
         <Box w="240px" bg="gray" p={4}>
           <Heading size="sm">Navigation</Heading>
-          <ThemeList/>
+          <ThemeList />
         </Box>
         <Box flex="1" p={4}>
           <Heading size="lg">Main Content</Heading>
