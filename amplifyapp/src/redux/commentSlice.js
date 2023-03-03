@@ -7,7 +7,6 @@ const commentSlice = createSlice({
   initialState: [{entity_id: 1, comment: "デフォルトの感想です"}],
   reducers: {
     setComments: (state, action) => {
-      console.log('commentSlick action is ', action);
       return action.payload;
     },
   },

@@ -13,70 +13,70 @@ import { createServer } from "miragejs";
 import ThemeComponent from "./components/ThemeComponent";
 import { useDispatch, useSelector } from 'react-redux';
 import { setComments } from "./redux/commentSlice";
+import { setThemeList } from "./redux/themeListSlice";
+import { setSelectedThemeId } from './redux/selectedThemeSlice';
 
 let server = createServer();
-server.get("/theme", [{ entity_id: "theme-1", title: "モックのタイトルです" }]);
+server.get("/theme", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
 server.get("/theme/1", [{ entity_id: "comment-1", comment: "コメントのモック" }, { entity_id: "comment-2", comment: "コメントその２"}]);
 server.get("/theme/2", [{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}]);
+server.get("/theme/3", [{ entity_id: "comment-9", comment: "テID=3ｄｄｄｄ" }, { entity_id: "comment-8", comment: "33333l"}, { entity_id: "comment-10", comment: "3コメントＺＷ"}]);
 
 const ThemeList = () => {
-  var theme_list = [];
-  const theme_id = useSelector((state) => state.selectedTheme.id);
+  const dispatch = useDispatch();
   useEffect(() => {
     // APIリクエストを送信する処理
     // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
     fetch('/theme')
       .then(response => response.json())
       .then(result => {
-        theme_list = result;
-        console.log('theme list load', theme_list);
+        dispatch(setThemeList(result));
       })
       .catch(error => {
         console.error('通信に失敗しました。', error);
       });
   }, []);
 
-  console.log('theme list ' , theme_list);
+  const theme_list = useSelector((state) => state.themeList);
+
+  const handleClick = (entity_id) => {
+    const id = entity_id.replace('theme-', '');
+    dispatch(setSelectedThemeId(id));
+  };
+
   return (
     <Box bg="gray">
-      <List >
-        <Box key={theme_id}>aaa</Box>
-      </List>
       <List spacing={1}>
-        {theme_list.map(item => (
-          <ListItem key={item.entity_id}>
-            <Button >{item.title}</Button>
-          </ListItem>
-        ))}
+        {
+          !(theme_list) ? <></> :
+          <>
+            {theme_list.map(item => (
+            <ListItem key={item.entity_id}>
+              <button onClick={() => handleClick(item.entity_id)} >{item.title}</button>
+            </ListItem>
+            ))}
+          </>
+        }
       </List>
     </Box>
   );
 };
 const CommentList = () => {
-  // useEffect(() => {
-    // APIリクエストを送信する処理
-    // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
-  //   fetch('/theme/' + theme_id)
-  //     .then(response => response.json())
-  //     .then(result => {
-  //       setcomments(result);
-  //   });
-  // }, []);
   const theme_id = useSelector((state) => state.selectedTheme.id);
   const dispatch = useDispatch();
-  // var comments = []; //[{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}];
-  console.log('them id :' , theme_id);
 
   useEffect(() => {
     if (theme_id == 0) return;
     // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
-    console.log(` start requet theme Theme ID: ${theme_id}`);
     // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/1')
     fetch('/theme/' + theme_id)
       .then(response => response.json())
       .then((result) => {
-        console.log("mainContaints ", result);
         dispatch(setComments(result));
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(setComments([]));
       });
   }, [theme_id]);
 
@@ -86,11 +86,17 @@ const CommentList = () => {
   return (
     <Box bg="gray">
       <List spacing={1}>
-        {comment.map(item => (
-          <ListItem key={item.entity_id}>
-            <Text>{item.comment}</Text>
-          </ListItem>
-        ))}
+        {
+          !(comment) ? <></>
+          :
+          <>
+            {comment.map(item => (
+              <ListItem key={item.entity_id}>
+                <Text>{item.comment}</Text>
+              </ListItem>
+            ))}
+          </>
+      }
       </List>
     </Box>
   );

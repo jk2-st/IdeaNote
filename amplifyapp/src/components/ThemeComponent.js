@@ -1,7 +1,7 @@
 // components/selectedThemeComponent.js
 
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementselectedThemeId } from '../redux/selectedThemeSlice';
+import { setSelectedThemeId } from '../redux/selectedThemeSlice';
 import {useEffect} from 'react';
 
 export default function ThemeComponent() {
@@ -13,14 +13,14 @@ export default function ThemeComponent() {
     console.log(`Theme ID: ${id}`);
   }, [id]);
 
-  const handleClick = () => {
-    dispatch(incrementselectedThemeId(id+1));
+  const handleClick = (id) => {
+    dispatch(setSelectedThemeId(parseInt(id,10)+1));
   };
 
   return (
     <div>
       <h2>Theme ID: {id}</h2>
-      <button onClick={handleClick}>Increment Theme ID</button>
+      <button onClick={() => handleClick(id)} key={id}>Increment Theme ID</button>
     </div>
   );
 }

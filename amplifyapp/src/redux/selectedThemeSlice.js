@@ -6,13 +6,12 @@ const selectedThemeSlice = createSlice({
   name: 'selectedTheme',
   initialState: { id: 1 },
   reducers: {
-    incrementselectedThemeId: (state, action) => {
-      console.log('selectedThemeSlice action is', action);
+    setSelectedThemeId: (state, action) => {
       return {id: action.payload};
     },
   },
 });
 
-export const { incrementselectedThemeId } = selectedThemeSlice.actions;
+export const { setSelectedThemeId } = selectedThemeSlice.actions;
 
 export default selectedThemeSlice.reducer;
