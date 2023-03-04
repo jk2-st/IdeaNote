@@ -13,7 +13,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const AddComment = () => {
-  const theme_id = 1;
+  const theme_id = useSelector((state) => state.selectedTheme.id);
   //見た目の設定
   const theme = createTheme({
     typography: {
