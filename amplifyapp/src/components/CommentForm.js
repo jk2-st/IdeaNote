@@ -35,7 +35,7 @@ export const AddComment = () => {
   const [values, setValues] = useState(
     {
       theme_id: theme_id,
-      message: "",
+      comment: "",
       isSubmitted: false
     }
   );
@@ -55,7 +55,7 @@ export const AddComment = () => {
       apiUrl + '/comments',
       {
         'theme_id': theme_id,
-        'comment': "this comments",
+        'comment': values.comment,
       }
     )
     .then(result => {

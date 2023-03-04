@@ -52,7 +52,7 @@ export const AddTheme = () => {
     await axios.post(
       apiUrl + '/themes',
       {
-        'title': "新しいテーマです",
+        'title': values.title
       }
     )
     .then(result => {
