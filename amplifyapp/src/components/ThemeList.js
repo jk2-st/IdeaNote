@@ -3,19 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Flex, List, Spacer, Heading, Button , ListItem, Text } from '@chakra-ui/react';
 import { setThemeList } from "../redux/themeListSlice";
 import { setSelectedThemeId } from '../redux/selectedThemeSlice';
+const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const ThemeList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     // APIリクエストを送信する処理
-    // fetch('https://bxjn36imz9.execute-api.ap-northeast-1.amazonaws.com/prod/theme/')
-    fetch('/theme')
+    fetch(apiUrl + '/theme')
       .then(response => response.json())
       .then(result => {
         dispatch(setThemeList(result));
       })
       .catch(error => {
-        console.error('通信に失敗しました。', error);
+        console.error('テーマ取得APIでの通信に失敗しました。', error);
       });
   }, []);
 
