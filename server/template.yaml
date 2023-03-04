@@ -53,7 +53,7 @@ Resources:
         GetTheme:
           Type: Api
           Properties:
-            Path: /theme/
+            Path: /themes
             Method: GET
             RestApiId: !Ref IdeaNoteApi
   # Each Lambda function is defined by properties:
@@ -78,7 +78,7 @@ Resources:
         GetComments:
           Type: Api
           Properties:
-            Path: /theme/{theme_id}
+            Path: /comments/themes/{theme_id}
             Method: GET
             RestApiId: !Ref IdeaNoteApi
   # Each Lambda function is defined by properties:
@@ -102,7 +102,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /theme/
+            Path: /themes
             Method: POST
             RestApiId: !Ref IdeaNoteApi
 
@@ -125,7 +125,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /comment/
+            Path: /comments
             Method: POST
             RestApiId: !Ref IdeaNoteApi
 

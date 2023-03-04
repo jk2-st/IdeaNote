@@ -42,7 +42,12 @@ export const getCommentsById = async (event) => {
  
   const response = {
     statusCode: 200,
-    body: JSON.stringify(items)
+    body: JSON.stringify(items),
+    headers: {
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET"
+     },
   };
  
   // All log statements are written to CloudWatch
