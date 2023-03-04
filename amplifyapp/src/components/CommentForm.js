@@ -5,7 +5,10 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { addComments } from "../redux/commentSlice";
 import axios from 'axios';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 // 参考URL：https://blog.usize-tech.com/sendmail-form-by-react-mui/
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -43,39 +46,46 @@ export const AddComment = () => {
     const name = target.name;
     setValues({ ...values, [name]: value });
   };
+
+  const dispatch = useDispatch();
   //送信ボタンクリック後の処理
   const handleSubmit = async () => {
+
     await axios.post(
       apiUrl + '/comment',
       {
         'theme_id': theme_id,
         'comment': "this comments",
       }
-    );
+    )
+    .then(result => {
+        console.log('コメント追加APIに成功しました。', result);
+        dispatch(addComments(result.data));
+    })
+    .catch(error => {
+        console.error('コメント追加APIに失敗しました。', error);
+    });
     setValues({ isSubmitted: true });
+  };
+
+  const displayAddButton = () => {
+    setValues({ isSubmitted: false});
   };
   //画面表示内容
   return values.isSubmitted ? (
-    <section>
-      {/* 送信済みフラグが true であれば 送信しました画面 を表示 */}
-      <h2>コメント</h2>
-      <p>コメントを送信しました。</p>
-    </section>
+    <Button 
+        color="secondary"
+        variant="contained"
+        size="large"
+        endIcon={<AddCircleOutlineIcon />}
+        onClick={displayAddButton}
+    >コメントを追加する</Button>
   ) : (
     <section>
       {/* 送信済みフラグが false であれば 入力画面 を表示 */}
       <Box component="form" noValidate autoComplete="off">
         <ThemeProvider theme={theme}>
           <FormControl fullWidth>
-            <TextField
-              name="theme_id"
-              id="theme_id"
-              sx={{ display : 'none'}}
-              InputProps={{ style: textfieldStyles }}
-              InputLabelProps={{ style: textlabelStyles }}
-              value={values.theme_id}
-              onChange={handleChange}
-            />
             <TextField
               name="comment"
               id="comment"
@@ -98,7 +108,7 @@ export const AddComment = () => {
             variant="contained"
             size="large"
             endIcon={<SendIcon />}
-            disabled={(values.theme_id && values.comment) ? false : true}
+            disabled={(theme_id && values.comment) ? false : true}
             onClick={handleSubmit}
           >
             メモを追加する

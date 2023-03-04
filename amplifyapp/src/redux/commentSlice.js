@@ -9,9 +9,12 @@ const commentSlice = createSlice({
     setComments: (state, action) => {
       return action.payload;
     },
+    addComments: (state, action) => {
+      return state.concat(action.payload);
+    }
   },
 });
 
-export const { setComments } = commentSlice.actions;
+export const { setComments, addComments } = commentSlice.actions;
 
 export default commentSlice.reducer;
