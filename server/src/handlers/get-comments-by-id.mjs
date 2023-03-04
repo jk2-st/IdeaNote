@@ -48,6 +48,7 @@ export const getCommentsById = async (event) => {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET"
      },
+
   };
  
   // All log statements are written to CloudWatch

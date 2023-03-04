@@ -62,6 +62,7 @@ export const postThemeHandler = async (event) => {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST"
          },
+
     };
 
     // All log statements are written to CloudWatch

@@ -64,6 +64,7 @@ export const postCommentHandler = async (event) => {
           "Access-Control-Allow-Methods": "POST"
          },
 
+
     };
 
     // All log statements are written to CloudWatch
