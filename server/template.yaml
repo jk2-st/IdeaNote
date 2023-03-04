@@ -34,6 +34,17 @@ Resources:
         AllowOrigin: "'*'"
         AllowMethods: "'OPTIONS,HEAD,GET,PUT,POST,DELETE'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      Auth:
+        Authorizers:
+          cognitoAuth:
+            UserPoolArn: arn:aws:cognito-idp:ap-northeast-1:260029619298:userpool/ap-northeast-1_9HZqR6BBm
+        DefaultAuthorizer: cognitoAuth
+        InvokeRole: CALLER_CREDENTIALS
+      MethodSettings:
+        - DataTraceEnabled: true
+          # LoggingLevel: INFO
+          ResourcePath: '/*'
+          HttpMethod: '*'
 
   getAllThemeFunction:
     Type: AWS::Serverless::Function
