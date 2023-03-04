@@ -57,7 +57,14 @@ export const postCommentHandler = async (event) => {
 
     const response = {
         statusCode: 200,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        headers: {
+          "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+         },
+
+
     };
 
     // All log statements are written to CloudWatch

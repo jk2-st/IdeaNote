@@ -34,6 +34,17 @@ Resources:
         AllowOrigin: "'*'"
         AllowMethods: "'OPTIONS,HEAD,GET,PUT,POST,DELETE'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      Auth:
+        Authorizers:
+          cognitoAuth:
+            UserPoolArn: arn:aws:cognito-idp:ap-northeast-1:260029619298:userpool/ap-northeast-1_9HZqR6BBm
+        DefaultAuthorizer: cognitoAuth
+        InvokeRole: CALLER_CREDENTIALS
+      MethodSettings:
+        - DataTraceEnabled: true
+          # LoggingLevel: INFO
+          ResourcePath: '/*'
+          HttpMethod: '*'
 
   getAllThemeFunction:
     Type: AWS::Serverless::Function
@@ -53,7 +64,7 @@ Resources:
         GetTheme:
           Type: Api
           Properties:
-            Path: /theme/
+            Path: /themes
             Method: GET
             RestApiId: !Ref IdeaNoteApi
   # Each Lambda function is defined by properties:
@@ -78,7 +89,7 @@ Resources:
         GetComments:
           Type: Api
           Properties:
-            Path: /theme/{theme_id}
+            Path: /comments/themes/{theme_id}
             Method: GET
             RestApiId: !Ref IdeaNoteApi
   # Each Lambda function is defined by properties:
@@ -102,7 +113,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /theme/
+            Path: /themes
             Method: POST
             RestApiId: !Ref IdeaNoteApi
 
@@ -125,7 +136,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /comment/
+            Path: /comments
             Method: POST
             RestApiId: !Ref IdeaNoteApi
 
