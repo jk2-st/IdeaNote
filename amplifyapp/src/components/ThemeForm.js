@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addThemeList } from "../redux/themeListSlice";
 import axios from 'axios';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -46,15 +46,19 @@ export const AddTheme = () => {
   };
 
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.cognitoAuth);
   //送信ボタンクリック後の処理
-  const handleSubmit = async () => {
-
+  const handleSubmit = async (token) => {
     await axios.post(
       apiUrl + '/themes',
       {
         'title': values.title
       }
-    )
+    , {
+      headers: {
+        'Authorization': token,
+      }
+    })
     .then(result => {
         console.log('テーマ追加APIに成功しました。', result);
         dispatch(addThemeList(result.data));
@@ -107,7 +111,7 @@ export const AddTheme = () => {
             size="large"
             endIcon={<SendIcon />}
             disabled={(values.title) ? false : true}
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(token)}
           >
             テーマを追加する
           </Button>

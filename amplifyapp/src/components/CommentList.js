@@ -12,9 +12,14 @@ export const CommentList = () => {
   const theme_id = useSelector((state) => state.selectedTheme.id);
   const dispatch = useDispatch();
 
+  const token = useSelector((state) => state.cognitoAuth);
   useEffect(() => {
     // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
-    fetch(apiUrl + '/comments/themes/' + theme_id)
+    fetch(apiUrl + '/comments/themes/' + theme_id, {
+      headers: {
+        'Authorization': token,
+      }
+    })
       .then(response => response.json())
       .then((result) => {
         dispatch(setComments(result));

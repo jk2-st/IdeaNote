@@ -2,7 +2,7 @@ import "@aws-amplify/ui-react/styles.css";
 import {
   withAuthenticator,
 } from "@aws-amplify/ui-react";
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { createServer } from "miragejs";
 import { ThemeList } from './components/ThemeList';
@@ -10,6 +10,9 @@ import { CommentList } from './components/CommentList';
 import { AddComment } from "./components/CommentForm";
 import ButtonAppBar from "./components/AppBar";
 import { AddTheme } from "./components/ThemeForm";
+import { useDispatch, useSelector } from 'react-redux';
+import { setCognitoAuth } from "./redux/cognitoAuthSlice";
+import { Auth } from 'aws-amplify';
 
 // let server = createServer();
 // server.get("/themes", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
@@ -20,6 +23,15 @@ import { AddTheme } from "./components/ThemeForm";
 // server.post("/themes", [{ entity_id: "theme-6", title: "テーマ追加新しく成功下モック" },{ entity_id: "theme-9", title: "適当追加タイトル" }]);
 
 function App({ signOut }) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    Auth.currentUserPoolUser()
+      .then(response => {
+        const token = response.signInUserSession.idToken.jwtToken;
+        dispatch(setCognitoAuth(token));
+      })
+      .catch(error => console.error("CognitoのAuth取得に失敗しました",error));
+  }, []);
   return (
     <>
       <ButtonAppBar signOut={signOut}/>

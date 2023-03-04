@@ -9,14 +9,20 @@ import ListItemButton from '@mui/material/ListItemButton';
 // import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { teal } from '@mui/material/colors';
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const ThemeList = () => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.cognitoAuth);
   useEffect(() => {
     // APIリクエストを送信する処理
-    fetch(apiUrl + '/themes')
+    fetch(apiUrl + '/themes', {
+      headers: {
+        'Authorization': token,
+      }
+    })
       .then(response => response.json())
       .then(result => {
         dispatch(setThemeList(result));

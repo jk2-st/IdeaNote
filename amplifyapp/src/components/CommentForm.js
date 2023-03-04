@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addComments } from "../redux/commentSlice";
 import axios from 'axios';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -48,16 +48,20 @@ export const AddComment = () => {
   };
 
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.cognitoAuth);
   //送信ボタンクリック後の処理
-  const handleSubmit = async () => {
-
+  const handleSubmit = async (token) => {
     await axios.post(
       apiUrl + '/comments',
       {
         'theme_id': theme_id,
         'comment': values.comment,
       }
-    )
+    , {
+      headers: {
+        'Authorization': token,
+      }
+    })
     .then(result => {
         console.log('コメント追加APIに成功しました。', result);
         dispatch(addComments(result.data));
@@ -108,7 +112,7 @@ export const AddComment = () => {
             size="large"
             endIcon={<SendIcon />}
             disabled={(theme_id && values.comment) ? false : true}
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(token)}
           >
             メモを追加する
           </Button>
