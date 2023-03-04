@@ -16,7 +16,7 @@ export const ThemeList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     // APIリクエストを送信する処理
-    fetch(apiUrl + '/theme')
+    fetch(apiUrl + '/themes')
       .then(response => response.json())
       .then(result => {
         dispatch(setThemeList(result));

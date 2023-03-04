@@ -14,7 +14,7 @@ export const CommentList = () => {
 
   useEffect(() => {
     // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
-    fetch(apiUrl + '/theme/' + theme_id)
+    fetch(apiUrl + '/comments/themes/' + theme_id)
       .then(response => response.json())
       .then((result) => {
         dispatch(setComments(result));

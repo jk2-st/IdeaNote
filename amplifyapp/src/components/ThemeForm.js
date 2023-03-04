@@ -50,7 +50,7 @@ export const AddTheme = () => {
   const handleSubmit = async () => {
 
     await axios.post(
-      apiUrl + '/theme',
+      apiUrl + '/themes',
       {
         'title': "新しいテーマです",
       }

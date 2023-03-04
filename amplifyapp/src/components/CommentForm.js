@@ -52,7 +52,7 @@ export const AddComment = () => {
   const handleSubmit = async () => {
 
     await axios.post(
-      apiUrl + '/comment',
+      apiUrl + '/comments',
       {
         'theme_id': theme_id,
         'comment': "this comments",
