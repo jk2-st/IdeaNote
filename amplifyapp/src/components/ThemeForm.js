@@ -76,7 +76,7 @@ export const AddTheme = () => {
   return values.isSubmitted ? (
     // 送信済みフラグが false であれば 入力画面 を表示
     <Button 
-        fullWidth
+        fullWidth="true"
         color="secondary"
         variant="contained"
         size="large"

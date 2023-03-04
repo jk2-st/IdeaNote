@@ -78,7 +78,7 @@ export const AddComment = () => {
   //画面表示内容
   return values.isSubmitted ? (
     <Button 
-        fullWidth
+        fullWidth="true"
         color="secondary"
         variant="contained"
         size="large"
@@ -107,7 +107,7 @@ export const AddComment = () => {
               onChange={handleChange}
             />
           <Button
-            fullwidth
+            fullwidth="true"
             variant="contained"
             size="large"
             endIcon={<SendIcon />}
