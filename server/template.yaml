@@ -39,6 +39,7 @@ Resources:
           cognitoAuth:
             UserPoolArn: arn:aws:cognito-idp:ap-northeast-1:260029619298:userpool/ap-northeast-1_9HZqR6BBm
         DefaultAuthorizer: cognitoAuth
+        AddDefaultAuthorizerToCorsPreflight: false
         InvokeRole: CALLER_CREDENTIALS
       MethodSettings:
         - DataTraceEnabled: true
