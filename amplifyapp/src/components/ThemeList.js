@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 // import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { teal } from '@mui/material/colors';
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+import { close } from '../redux/navigationBarSlice';
 
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -31,12 +31,13 @@ export const ThemeList = () => {
         console.error('テーマ取得APIでの通信に失敗しました。', error);
       });
   }, []);
-
   const theme_list = useSelector((state) => state.themeList);
 
+  // テーマIDをセットする。また出現しているドロワーを閉じる
   const handleClick = (entity_id) => {
     const id = entity_id.replace('theme-', '');
     dispatch(setSelectedThemeId(id));
+    dispatch(close(false));
   };
 
   return !theme_list ? (
