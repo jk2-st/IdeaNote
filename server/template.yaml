@@ -92,9 +92,11 @@ Resources:
         GetComments:
           Type: Api
           Properties:
-            Path: /comments/themes/{theme_id}
+            Path: /themes/{theme_id}/comments
             Method: GET
             RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
@@ -119,7 +121,8 @@ Resources:
             Path: /themes
             Method: POST
             RestApiId: !Ref IdeaNoteApi
-
+      Layers:
+        - !Ref IdeaNoteLayer
   # This is a Lambda function config associated with the source code: put-item.js
   postCommentFunction:
     Type: AWS::Serverless::Function
@@ -142,6 +145,8 @@ Resources:
             Path: /comments
             Method: POST
             RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
 
   IdeaNoteLayer:
     Type: AWS::Serverless::LayerVersion

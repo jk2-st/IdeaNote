@@ -32,7 +32,17 @@ export const getAllThemeHandler = async (event) => {
 
     try {
         const data = await ddbDocClient.send(new ScanCommand(params));
-        var items = data.Items;
+        /**
+         * {id: nnn, title: mmm, ....}
+         * FIXME: レスポンス加工用のメソッドを作る
+         */
+        var items = data.Items.map(value => {
+          const theme_id = (value.entity_id).replace('theme-', '');
+          delete value.entity_id;
+          delete value.relation_id;
+          const result = Object.assign({id: theme_id}, value);
+          return result;
+        });
     } catch (err) {
         console.log("Error", err);
     }
