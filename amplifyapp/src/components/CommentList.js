@@ -18,7 +18,7 @@ export const CommentList = () => {
   const token = useSelector((state) => state.cognitoAuth);
   useEffect(() => {
     // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
-    fetch(apiUrl + '/comments/themes/' + theme_id, {
+    fetch(apiUrl + '/themes/' + theme_id + '/comments', {
       headers: {
         'Authorization': token,
       }
@@ -50,11 +50,11 @@ export const CommentList = () => {
           :
           <>
             {comment.map(item => (
-              <ListItem key={item.entity_id}>
+              <ListItem key={item.id}>
                 <List sx={{ alignItems: "center"}}>{item.comment}</List>
                 <ListItemIcon sx={{ display: isDisplay ? "flex" : "none", justifyContent: "flex-end"}}>
-                  <BuildCircle onClick={updateComment(item.entity_id)}/>
-                  <DeleteIcon onClick={deleteComment(item.entity_id)}/>
+                  <BuildCircle onClick={updateComment(item.id)}/>
+                  <DeleteIcon onClick={deleteComment(item.id)}/>
                 </ListItemIcon>
               </ListItem>
             ))}

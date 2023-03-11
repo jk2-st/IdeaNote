@@ -34,8 +34,7 @@ export const ThemeList = () => {
   const theme_list = useSelector((state) => state.themeList);
 
   // テーマIDをセットする。また出現しているドロワーを閉じる
-  const handleClick = (entity_id) => {
-    const id = entity_id.replace('theme-', '');
+  const handleClick = (id) => {
     dispatch(setSelectedThemeId(id));
     dispatch(close(false));
   };
@@ -46,8 +45,8 @@ export const ThemeList = () => {
     <>
     <List sx={{bgcolor: teal[50]}}>
       {theme_list.map((item) => (
-        <ListItem key={item.entity_id} disablePadding>
-          <ListItemButton onClick={() => handleClick(item.entity_id)}>
+        <ListItem key={item.id} disablePadding>
+          <ListItemButton onClick={() => handleClick(item.id)}>
             <ListItemText primary={item.title} />
           </ListItemButton>
         </ListItem>

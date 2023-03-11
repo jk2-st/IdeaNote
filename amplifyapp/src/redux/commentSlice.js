@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const commentSlice = createSlice({
   name: 'comment',
-  initialState: [{entity_id: 1, comment: "デフォルトの感想です"}],
+  initialState: [{id: 1, theme_id: 1, comment: "デフォルトの感想です"}],
   reducers: {
     setComments: (state, action) => {
       return action.payload;
