@@ -1,0 +1,200 @@
+swagger: '2.0'
+
+# モックのメタデータを記述する
+info:
+  description: |
+    アイディアノートアプリのAPI
+  version: 1.0.0
+  title: IdeaNote
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# モックサーバーのプロトコルの選択
+schemes:
+- http
+
+# エンドポイントの記述
+paths:
+  /themes:
+    get:
+      tags:
+      - comment
+      summary: テーマリスト取得
+      description: テーマリストを返却します
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Themes'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+  /themes/{theme_id}:
+    get:
+      tags:
+      - comment
+      summary: テーマ取得
+      description: テーマを返却します
+      produces:
+      - application/json
+      parameters:
+      - name: theme_id
+        in: path
+        description: ID of theme to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Theme'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+  /themes/{theme_id}/comments:
+    get:
+      tags:
+      - comment
+      summary: テーマに紐づくコメントリストを取得
+      description: テーマに紐づくコメントリストを取得
+      operationId: getPetById
+      parameters:
+      - name: theme_id
+        in: path
+        description: 対象のテーマID
+        required: true
+        type: integer
+        format: int64
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comments'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+
+  /comments:
+    post:
+      tags:
+      - comment
+      summary: コメントを追加
+      description: コメントを追加
+      parameters:
+      - name: theme_id
+        in: path
+        description: コメント追加する対象のテーマID
+        required: true
+        type: integer
+        format: int64
+      - name: comment
+        in: path
+        description: コメント
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comment'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+  /comments/{comment_id}:
+    put:
+      tags:
+      - comment
+      summary: コメントを更新
+      description: コメントを更新
+      parameters:
+      - name: comment_id
+        in: path
+        description: コメント修正
+        required: true
+        type: integer
+        format: int64
+      - name: comment
+        in: path
+        description: コメント
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comment'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+    delete:
+      tags:
+      - comment
+      summary: コメントを削除
+      description: コメントを削除
+      parameters:
+      - name: comment_id
+        in: path
+        description: コメント削除
+        required: true
+        type: integer
+        format: int64
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+# モデル定義の記述
+definitions:
+  Comments: 
+    type: array
+    items:
+      properties: 
+        id:
+          type: integer
+        theme_id:
+          type: integer
+        comment:
+          type: string
+  Comment:
+    type: object
+    properties:
+      id:
+        type: integer
+      theme_id:
+        type: integer
+      comment:
+        type: string
+  Themes:
+    type: array
+    items:
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+  Theme:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string

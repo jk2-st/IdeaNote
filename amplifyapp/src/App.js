@@ -14,13 +14,13 @@ import { setCognitoAuth } from "./redux/cognitoAuthSlice";
 import { Auth } from 'aws-amplify';
 import { NavigationBar } from "./components/NavigationBar";
 
-// let server = createServer();
-// server.get("/themes", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
-// server.get("/comments/themes/1", [{ entity_id: "comment-1", comment: "コメントのモック" }, { entity_id: "comment-2", comment: "コメントその２"}]);
-// server.get("/comments/themes/2", [{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}]);
-// server.get("/comments/themes/3", [{ entity_id: "comment-9", comment: "テID=3ｄｄｄｄ" }, { entity_id: "comment-8", comment: "33333l"}, { entity_id: "comment-10", comment: "3コメントＺＷ"}]);
-// server.post("/comments", [{ entity_id: "comment-13 ", comment: "コメント追加成功１"}, { entity_id: "comment-20", comment: "ＺＷ"}]);
-// server.post("/themes", [{ entity_id: "theme-6", title: "テーマ追加新しく成功下モック" },{ entity_id: "theme-9", title: "適当追加タイトル" }]);
+let server = createServer();
+server.get("/themes", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
+server.get("/comments/themes/1", [{ entity_id: "comment-1", comment: "コメントのモック" }, { entity_id: "comment-2", comment: "コメントその２"}]);
+server.get("/comments/themes/2", [{ entity_id: "comment-4", comment: "テーマ２のコメント" }, { entity_id: "comment-5", comment: "the  aaaaa"}]);
+server.get("/comments/themes/3", [{ entity_id: "comment-9", comment: "テID=3ｄｄｄｄ" }, { entity_id: "comment-8", comment: "33333l"}, { entity_id: "comment-10", comment: "3コメントＺＷ"}]);
+server.post("/comments", [{ entity_id: "comment-13 ", comment: "コメント追加成功１"}, { entity_id: "comment-20", comment: "ＺＷ"}]);
+server.post("/themes", [{ entity_id: "theme-6", title: "テーマ追加新しく成功下モック" },{ entity_id: "theme-9", title: "適当追加タイトル" }]);
 
 function App({ signOut }) {
   const dispatch = useDispatch();
