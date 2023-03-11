@@ -6,8 +6,14 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import { toggle } from '../redux/navigationBarSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function ButtonAppBar({ signOut }) {
+  const dispatch = useDispatch();
+  const handleDrawerToggle = () => {
+    dispatch(toggle());
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -18,6 +24,7 @@ export default function ButtonAppBar({ signOut }) {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </IconButton>

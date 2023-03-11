@@ -5,14 +5,14 @@ import {
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { createServer } from "miragejs";
-import { ThemeList } from './components/ThemeList';
 import { CommentList } from './components/CommentList';
 import { AddComment } from "./components/CommentForm";
 import ButtonAppBar from "./components/AppBar";
-import { AddTheme } from "./components/ThemeForm";
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setCognitoAuth } from "./redux/cognitoAuthSlice";
 import { Auth } from 'aws-amplify';
+import { NavigationBar } from "./components/NavigationBar";
 
 // let server = createServer();
 // server.get("/themes", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
@@ -44,11 +44,8 @@ function App({ signOut }) {
     <>
       <ButtonAppBar signOut={signOut}/>
       <Box sx={{display: 'flex', height:"calc(100% - 64px)"}}>
-        <Box flex="1" sx={{width: 1/6}}>
-          <ThemeList />
-          <AddTheme />
-        </Box>
         <Box flex="2">
+        <NavigationBar />
           <CommentList />
           <AddComment />
         </Box>
