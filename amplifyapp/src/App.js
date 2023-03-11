@@ -23,8 +23,18 @@ import { Auth } from 'aws-amplify';
 // server.post("/themes", [{ entity_id: "theme-6", title: "テーマ追加新しく成功下モック" },{ entity_id: "theme-9", title: "適当追加タイトル" }]);
 
 function App({ signOut }) {
+  const checkAuth = async () => {
+    try {
+      await Auth.currentAuthenticatedUser();
+    } catch (error) {
+      // 認証期限切れの場合はログイン画面にリダイレクトするなどの処理を行う
+      // 例えば、React Routerのhistory.push('/')を使用してログイン画面に遷移することができます。
+      history.push('/');
+    }
+  };
   const dispatch = useDispatch();
   useEffect(() => {
+    checkAuth();
     Auth.currentUserPoolUser()
       .then(response => {
         const token = response.signInUserSession.idToken.jwtToken;
