@@ -3,6 +3,9 @@
 // Create a DocumentClient that represents the query to add an item
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const buildResponse = require('/opt/lib/buildResponse');
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
@@ -34,15 +37,16 @@ export const getAllThemeHandler = async (event) => {
         console.log("Error", err);
     }
 
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify(items),
-        headers: {
-            "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET"
-        },
-    };
+    const response = buildResponse(items);
+    // const response = {
+    //     statusCode: 200,
+    //     body: JSON.stringify(items),
+    //     headers: {
+    //         "Access-Control-Allow-Headers" : "Content-Type",
+    //         "Access-Control-Allow-Origin": "*",
+    //         "Access-Control-Allow-Methods": "GET"
+    //     },
+    // };
 
     // All log statements are written to CloudWatch
     console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
