@@ -53,7 +53,7 @@ export const postThemeHandler = async (event) => {
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
-        const result = {id: atomic_counter.Attributes.count, title: title};
+        var result = {id: atomic_counter.Attributes.count, title: title};
       } catch (err) {
         console.log("Error", err.stack);
       }
