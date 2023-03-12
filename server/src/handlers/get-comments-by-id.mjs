@@ -31,8 +31,10 @@ export const getCommentsById = async (event) => {
     TableName: tableName,
     IndexName : "comment_list",
     KeyConditionExpression: 'relation_id = :id',
+    FilterExpression: "delete_flg <> :value",
     ExpressionAttributeValues: {
-      ':id': id
+      ':id': id,
+      ':value': 1
     },
   };
 
@@ -47,7 +49,7 @@ export const getCommentsById = async (event) => {
       const theme_id = (value.relation_id).replace('theme-', '');
       delete value.entity_id;
       delete value.relation_id;
-      const result = Object.assign({id: comment_id, theme_id: theme_id}, value);
+      const result = Object.assign({id: parseInt(comment_id), theme_id: parseInt(theme_id)}, value);
       return result;
     });
   } catch (err) {

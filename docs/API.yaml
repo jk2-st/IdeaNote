@@ -83,6 +83,21 @@ paths:
         404:
           description: Pet not found
 
+  /themes/{theme_id}/comments/{id}:
+    delete:
+      tags:
+      - comment
+      summary: コメントを削除
+      description: コメントを削除
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
   /comments:
     post:
       tags:
@@ -141,27 +156,7 @@ paths:
           description: Invalid ID supplied
         404:
           description: Pet not found
-    delete:
-      tags:
-      - comment
-      summary: コメントを削除
-      description: コメントを削除
-      parameters:
-      - name: comment_id
-        in: path
-        description: コメント削除
-        required: true
-        type: integer
-        format: int64
-      produces:
-      - application/json
-      responses:
-        200:
-          description: successful operation
-        400:
-          description: Invalid ID supplied
-        404:
-          description: Pet not found
+
 # モデル定義の記述
 definitions:
   Comments: 

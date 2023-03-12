@@ -40,7 +40,7 @@ export const getAllThemeHandler = async (event) => {
           const theme_id = (value.entity_id).replace('theme-', '');
           delete value.entity_id;
           delete value.relation_id;
-          const result = Object.assign({id: theme_id}, value);
+          const result = Object.assign({id: parseInt(theme_id)}, value);
           return result;
         });
     } catch (err) {
