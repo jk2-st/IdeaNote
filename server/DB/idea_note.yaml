@@ -1,8 +1,27 @@
 AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+      - stg
+      - prod
+
+Mappings:
+  DB:
+    TableName:
+      stg: IdeaNoteDB-stg
+      prod: IdeaNoteDB-prod
+
+Conditions:
+  IsProd:
+    !Equals [!Ref Env, prod]
+
 Resources:
   IdeaNoteDB:
     Type: AWS::DynamoDB::Table
     Properties: 
+      TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       AttributeDefinitions: 
         - 
           AttributeName: "entity_id"
@@ -26,7 +45,6 @@ Resources:
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
-      TableName: "IdeaNoteDB"
       GlobalSecondaryIndexes: 
         - 
           IndexName: "theme_list"
