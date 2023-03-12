@@ -17,9 +17,10 @@ schemes:
 # エンドポイントの記述
 paths:
   /themes:
+    # テーマリスト取得API
     get:
       tags:
-      - comment
+        - theme
       summary: テーマリスト取得
       description: テーマリストを返却します
       produces:
@@ -29,48 +30,37 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/Themes'
-        400:
-          description: Invalid ID supplied
-        404:
-          description: Pet not found
-  /themes/{theme_id}:
-    get:
+    # テーマ登録API
+    post:
       tags:
-      - comment
-      summary: テーマ取得
-      description: テーマを返却します
+        - theme
+      summary: テーマを追加
+      description: テーマを追加
+      parameters:
+      - name: title
+        in: path
+        description: タイトル
+        required: true
+        type: string
       produces:
       - application/json
-      parameters:
-      - name: theme_id
-        in: path
-        description: ID of theme to return
-        required: true
-        type: integer
-        format: int64
       responses:
         200:
           description: successful operation
           schema:
-            $ref: '#/definitions/Theme'
+            $ref: '#/definitions/theme'
         400:
           description: Invalid ID supplied
         404:
           description: Pet not found
   /themes/{theme_id}/comments:
+    # コメントリスト取得API
     get:
       tags:
       - comment
       summary: テーマに紐づくコメントリストを取得
       description: テーマに紐づくコメントリストを取得
       operationId: getPetById
-      parameters:
-      - name: theme_id
-        in: path
-        description: 対象のテーマID
-        required: true
-        type: integer
-        format: int64
       produces:
       - application/json
       responses:
@@ -82,8 +72,54 @@ paths:
           description: Invalid ID supplied
         404:
           description: Pet not found
-
-  /themes/{theme_id}/comments/{id}:
+    # コメント登録API
+    post:
+      tags:
+      - comment
+      summary: コメントを追加
+      description: コメントを追加
+      parameters:
+      - name: comment
+        in: path
+        description: コメント
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comment'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+  /themes/{theme_id}/comments/{comment_id}:
+    # コメント更新API
+    put:
+      tags:
+      - comment
+      summary: コメントを更新
+      description: コメントを更新
+      parameters:
+      - name: comment
+        in: path
+        description: コメント
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comment'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Pet not found
+    # コメント削除API
     delete:
       tags:
       - comment
@@ -94,64 +130,6 @@ paths:
       responses:
         200:
           description: successful operation
-        400:
-          description: Invalid ID supplied
-        404:
-          description: Pet not found
-  /comments:
-    post:
-      tags:
-      - comment
-      summary: コメントを追加
-      description: コメントを追加
-      parameters:
-      - name: theme_id
-        in: path
-        description: コメント追加する対象のテーマID
-        required: true
-        type: integer
-        format: int64
-      - name: comment
-        in: path
-        description: コメント
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        200:
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Comment'
-        400:
-          description: Invalid ID supplied
-        404:
-          description: Pet not found
-  /comments/{comment_id}:
-    put:
-      tags:
-      - comment
-      summary: コメントを更新
-      description: コメントを更新
-      parameters:
-      - name: comment_id
-        in: path
-        description: コメント修正
-        required: true
-        type: integer
-        format: int64
-      - name: comment
-        in: path
-        description: コメント
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        200:
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Comment'
         400:
           description: Invalid ID supplied
         404:
