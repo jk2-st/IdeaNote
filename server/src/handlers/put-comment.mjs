@@ -42,7 +42,7 @@ export const putCommentHandler = async (event) => {
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
-        var result = {id: id, theme_id: theme_id, comment: comment};
+        var result = {id: parseInt(event.pathParameters.id), theme_id: parseInt(body.theme_id), comment: comment};
       } catch (err) {
         console.log("Error", err.stack);
       }
