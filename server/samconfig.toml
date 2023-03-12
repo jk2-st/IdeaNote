@@ -18,10 +18,10 @@ capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
 stack_name = "IdeaNote"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1iozy70z8zlfi"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-ce5b49q07nro"
 s3_prefix = "IdeaNote"
 region = "ap-northeast-1"
-parameter_overrides = "VersionParam=\"v1\" StageNameParam=\"prod\" TableName=\"IdeaNoteDB\""
+parameter_overrides = "Env=\"prod\""
 image_repositories = []
 
 [default.package]
