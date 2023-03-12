@@ -15,9 +15,13 @@ export const CommentList = () => {
   const theme_id = useSelector((state) => state.selectedTheme.id);
   const dispatch = useDispatch();
 
-  const token = useSelector((state) => state.cognitoAuth);
+  const token = useSelector((state) => state.cognitoAuth.token);
   useEffect(() => {
     // ここでAPIリクエストを行い、テーマを取得する等の処理を行う
+    if (!token) {
+      console.log('コメント取得API：empty token');
+      return;
+    }
     fetch(apiUrl + '/themes/' + theme_id + '/comments', {
       headers: {
         'Authorization': token,
@@ -34,7 +38,6 @@ export const CommentList = () => {
   }, [theme_id]);
 
   const comment = useSelector((state) => state.comment);
-  console.log('this is comments : ', comment);
   const isDisplay = false; // TODO: 編集モード時のみ変更削除アイコンを表示する
   const updateComment = ($id) => {
     // TODO: コメント更新APIをリクエスト＋編集モード解除

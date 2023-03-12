@@ -46,7 +46,7 @@ export const AddTheme = () => {
   };
 
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.cognitoAuth);
+  const token = useSelector((state) => state.cognitoAuth.token);
   //送信ボタンクリック後の処理
   const handleSubmit = async (token) => {
     await axios.post(

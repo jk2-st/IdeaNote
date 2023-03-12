@@ -15,9 +15,13 @@ const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
 export const ThemeList = () => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.cognitoAuth);
+  const token = useSelector((state) => state.cognitoAuth.token);
   useEffect(() => {
     // APIリクエストを送信する処理
+    if (token == "") {
+      console.log('テーマ取得API：empty token');
+      return;
+    };
     fetch(apiUrl + '/themes', {
       headers: {
         'Authorization': token,
@@ -30,7 +34,7 @@ export const ThemeList = () => {
       .catch(error => {
         console.error('テーマ取得APIでの通信に失敗しました。', error);
       });
-  }, []);
+  }, [token]);
   const theme_list = useSelector((state) => state.themeList);
 
   // テーマIDをセットする。また出現しているドロワーを閉じる
