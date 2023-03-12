@@ -52,13 +52,12 @@ export const AddComment = () => {
   //送信ボタンクリック後の処理
   const handleSubmit = async (token) => {
     if (!token) {
-      console.log('コメント取得API：empty token');
+      console.log('コメント追加API：empty token');
       return;
     }
     await axios.post(
-      apiUrl + '/comments',
+      apiUrl + '/themes/' + theme_id + '/comments',
       {
-        'theme_id': theme_id,
         'comment': values.comment,
       }
     , {
