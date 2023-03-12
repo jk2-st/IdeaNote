@@ -5,7 +5,9 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const buildResponse = require('/opt/lib/buildResponse');
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;
 
@@ -51,21 +53,21 @@ export const postCommentHandler = async (event) => {
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
+        var result = {id: atomic_counter.Attributes.count, theme_id: parseInt(theme_id), comment: comment};
       } catch (err) {
         console.log("Error", err.stack);
       }
 
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify(body),
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST"
-         },
-
-
-    };
+    const response = buildResponse(result);
+    // const response = {
+    //     statusCode: 200,
+    //     body: JSON.stringify(body),
+    //     headers: {
+    //       "Access-Control-Allow-Headers" : "Content-Type",
+    //       "Access-Control-Allow-Origin": "*",
+    //       "Access-Control-Allow-Methods": "POST"
+    //      },
+    // };
 
     // All log statements are written to CloudWatch
     console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);

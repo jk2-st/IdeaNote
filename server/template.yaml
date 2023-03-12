@@ -6,15 +6,21 @@ Transform:
 - AWS::Serverless-2016-10-31
 
 Parameters:
-  VersionParam:
+  Env:
     Type: String
-    Default: v1
-  StageNameParam:
-    Type: String
-    Default: prod
-  TableName:
-    Type: String
-    Default: IdeaNoteDB
+    AllowedValues:
+      - stg
+      - prod
+
+Mappings:
+  DB:
+    TableName:
+      stg: IdeaNoteDB-stg
+      prod: IdeaNoteDB-prod
+
+Conditions:
+  IsProd:
+    !Equals [!Ref Env, prod]
 
 Resources:
   # API declaration
@@ -28,7 +34,7 @@ Resources:
         # LoggingLevel: INFO
     Properties:
       Name: IdeaNoteApi 
-      StageName: !Ref StageNameParam
+      StageName: !Ref Env
       TracingEnabled: true
       Cors:
         AllowOrigin: "'*'"
@@ -47,6 +53,7 @@ Resources:
           ResourcePath: '/*'
           HttpMethod: '*'
 
+  # テーマリスト取得API
   getAllThemeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -56,11 +63,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         GetTheme:
           Type: Api
@@ -73,7 +80,7 @@ Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
-  # This is a Lambda function config associated with the source code: get-comments-by-id.js
+  # コメントリスト取得API
   getCommentsBythemeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -83,21 +90,24 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         GetComments:
           Type: Api
           Properties:
-            Path: /comments/themes/{theme_id}
+            Path: /themes/{theme_id}/comments
             Method: GET
             RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
+  # テーマ登録API
   postThemeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -107,11 +117,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         Api:
           Type: Api
@@ -119,8 +129,10 @@ Resources:
             Path: /themes
             Method: POST
             RestApiId: !Ref IdeaNoteApi
-
+      Layers:
+        - !Ref IdeaNoteLayer
   # This is a Lambda function config associated with the source code: put-item.js
+  # コメント登録API
   postCommentFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -130,11 +142,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         Api:
           Type: Api
@@ -142,6 +154,58 @@ Resources:
             Path: /comments
             Method: POST
             RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
+
+  # コメント更新API
+  putCommentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/put-comment.putCommentHandler
+      Runtime: nodejs18.x
+      Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the TableName
+        - DynamoDBCrudPolicy:
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /comments/{id}
+            Method: PUT
+            RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
+
+  # コメント削除API
+  deleteCommentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/delete-comment.deleteCommentHandler
+      Runtime: nodejs18.x
+      Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the TableName
+        - DynamoDBCrudPolicy:
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /themes/{theme_id}/comments/{id}
+            Method: DELETE
+            RestApiId: !Ref IdeaNoteApi
+      Layers:
+        - !Ref IdeaNoteLayer
 
   IdeaNoteLayer:
     Type: AWS::Serverless::LayerVersion
