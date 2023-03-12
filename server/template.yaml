@@ -201,7 +201,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /comments/{id}
+            Path: /themes/{theme_id}/comments/{id}
             Method: DELETE
             RestApiId: !Ref IdeaNoteApi
       Layers:

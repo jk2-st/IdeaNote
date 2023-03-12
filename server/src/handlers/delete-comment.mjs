@@ -13,12 +13,11 @@ const tableName = process.env.SAMPLE_TABLE;
 
 /**
  * A simple example includes a HTTP delete method to add one item to a DynamoDB table.
+ * /themes/{theme_id}/comments/{id}:
  * event.pathParameters = {
+ *   "theme_id": bbb,
  *   "id": aaa,
  * },
- * event.body = {
- *  theme_id: mmm,
- * }
  */
 export const deleteCommentHandler = async (event) => {
     if (event.httpMethod !== 'DELETE') {
@@ -28,9 +27,8 @@ export const deleteCommentHandler = async (event) => {
     console.info('received:', event);
 
     // Get id and name from the body of the request
-    const body = JSON.parse(event.body);
     const id = 'comment-' + event.pathParameters.id;
-    const theme_id = 'theme-' + body.theme_id;
+    const theme_id = 'theme-' + event.pathParameters.theme_id;
 
     try {
       // コメントを論理削除
@@ -51,7 +49,7 @@ export const deleteCommentHandler = async (event) => {
       };
       const data = await ddbDocClient.send(new UpdateCommand(delete_parameters));
       console.log("Success - item added or updated", data);
-      var result = {id: id, theme_id: theme_id, message: '削除成功しました'};
+      var result = {id: parseInt(event.pathParameters.id), theme_id: parseInt(event.pathParameters.theme_id), message: '削除成功しました'};
     } catch (err) {
       console.log("Error", err.stack);
     }
