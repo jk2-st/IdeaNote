@@ -30,7 +30,7 @@ export const ThemeList = () => {
       .catch(error => {
         console.error('テーマ取得APIでの通信に失敗しました。', error);
       });
-  }, []);
+  }, [token]);
   const theme_list = useSelector((state) => state.themeList);
 
   // テーマIDをセットする。また出現しているドロワーを閉じる
