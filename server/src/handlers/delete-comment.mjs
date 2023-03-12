@@ -13,8 +13,10 @@ const tableName = process.env.SAMPLE_TABLE;
 
 /**
  * A simple example includes a HTTP delete method to add one item to a DynamoDB table.
+ * event.pathParameters = {
+ *   "id": aaa,
+ * },
  * event.body = {
- *  id: nnn,
  *  theme_id: mmm,
  * }
  */
@@ -27,7 +29,7 @@ export const deleteCommentHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const id = 'comment-' + body.id;
+    const id = 'comment-' + event.pathParameters.id;
     const theme_id = 'theme-' + body.theme_id;
 
     try {

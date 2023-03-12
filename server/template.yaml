@@ -161,7 +161,7 @@ Resources:
   putCommentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/post-comment.postCommentHandler
+      Handler: src/handlers/put-comment.putCommentHandler
       Runtime: nodejs18.x
       Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
       Policies:
@@ -186,7 +186,7 @@ Resources:
   deleteCommentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/post-comment.postCommentHandler
+      Handler: src/handlers/delete-comment.deleteCommentHandler
       Runtime: nodejs18.x
       Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
       Policies:
