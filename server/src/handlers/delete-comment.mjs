@@ -51,7 +51,7 @@ export const deleteCommentHandler = async (event) => {
       };
       const data = await ddbDocClient.send(new UpdateCommand(delete_parameters));
       console.log("Success - item added or updated", data);
-      const result = {id: id, theme_id: theme_id, message: '削除成功しました'};
+      var result = {id: id, theme_id: theme_id, message: '削除成功しました'};
     } catch (err) {
       console.log("Error", err.stack);
     }
