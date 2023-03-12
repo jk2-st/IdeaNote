@@ -4,10 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const cognitoAuthSlice = createSlice({
   name: 'cognitoAuth',
-  initialState: { },
+  initialState: { token: ""},
   reducers: {
     setCognitoAuth: (state, action) => {
-      return action.payload
+      return {token: action.payload}
     },
   },
 });

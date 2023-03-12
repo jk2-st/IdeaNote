@@ -48,9 +48,13 @@ export const AddComment = () => {
   };
 
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.cognitoAuth);
+  const token = useSelector((state) => state.cognitoAuth.token);
   //送信ボタンクリック後の処理
   const handleSubmit = async (token) => {
+    if (!token) {
+      console.log('コメント取得API：empty token');
+      return;
+    }
     await axios.post(
       apiUrl + '/comments',
       {
