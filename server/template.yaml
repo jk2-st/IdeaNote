@@ -6,15 +6,21 @@ Transform:
 - AWS::Serverless-2016-10-31
 
 Parameters:
-  VersionParam:
+  Env:
     Type: String
-    Default: v1
-  StageNameParam:
-    Type: String
-    Default: prod
-  TableName:
-    Type: String
-    Default: IdeaNoteDB
+    AllowedValues:
+      - stg
+      - prod
+
+Mappings:
+  DB:
+    TableName:
+      stg: IdeaNoteDB-stg
+      prod: IdeaNoteDB-prod
+
+Conditions:
+  IsProd:
+    !Equals [!Ref Env, prod]
 
 Resources:
   # API declaration
@@ -28,7 +34,7 @@ Resources:
         # LoggingLevel: INFO
     Properties:
       Name: IdeaNoteApi 
-      StageName: !Ref StageNameParam
+      StageName: !Ref Env
       TracingEnabled: true
       Cors:
         AllowOrigin: "'*'"
@@ -56,11 +62,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         GetTheme:
           Type: Api
@@ -83,11 +89,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         GetComments:
           Type: Api
@@ -109,11 +115,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         Api:
           Type: Api
@@ -133,11 +139,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the TableName
         - DynamoDBCrudPolicy:
-            TableName: !Ref TableName
+            TableName: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref TableName
+          SAMPLE_TABLE: !If [IsProd, !FindInMap [DB, TableName, prod], !FindInMap [DB, TableName, stg]]
       Events:
         Api:
           Type: Api
