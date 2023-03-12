@@ -31,8 +31,10 @@ export const getCommentsById = async (event) => {
     TableName: tableName,
     IndexName : "comment_list",
     KeyConditionExpression: 'relation_id = :id',
+    FilterExpression: "delete_flg <> :value",
     ExpressionAttributeValues: {
-      ':id': id
+      ':id': id,
+      ':value': 1
     },
   };
 
