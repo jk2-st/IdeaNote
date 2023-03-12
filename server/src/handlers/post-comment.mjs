@@ -53,7 +53,7 @@ export const postCommentHandler = async (event) => {
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
-        const result = {id: atomic_counter.Attributes.count, theme_id: theme_id, comment: comment};
+        var result = {id: atomic_counter.Attributes.count, theme_id: theme_id, comment: comment};
       } catch (err) {
         console.log("Error", err.stack);
       }
