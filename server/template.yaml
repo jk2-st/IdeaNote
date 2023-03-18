@@ -151,7 +151,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /comments
+            Path: /themes/{theme_id}/comments
             Method: POST
             RestApiId: !Ref IdeaNoteApi
       Layers:
@@ -176,7 +176,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /comments/{id}
+            Path: /themes/{theme_id}/comments/{comment_id}
             Method: PUT
             RestApiId: !Ref IdeaNoteApi
       Layers:
@@ -201,7 +201,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /themes/{theme_id}/comments/{id}
+            Path: /themes/{theme_id}/comments/{comment_id}
             Method: DELETE
             RestApiId: !Ref IdeaNoteApi
       Layers:

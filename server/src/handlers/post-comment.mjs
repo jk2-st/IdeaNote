@@ -23,7 +23,7 @@ export const postCommentHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const theme_id = 'theme-' + body.theme_id;
+    const theme_id = 'theme-' + event.pathParameters.theme_id;
     const comment = body.comment;
 
     var atomic_params = {
@@ -53,7 +53,7 @@ export const postCommentHandler = async (event) => {
         };
         const data = await ddbDocClient.send(new PutCommand(params));
         console.log("Success - item added or updated", data);
-        var result = {id: atomic_counter.Attributes.count, theme_id: parseInt(theme_id), comment: comment};
+        var result = {id: atomic_counter.Attributes.count, theme_id: parseInt(event.pathParameters.theme_id), comment: comment};
       } catch (err) {
         console.log("Error", err.stack);
       }

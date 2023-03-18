@@ -27,7 +27,7 @@ export const deleteCommentHandler = async (event) => {
     console.info('received:', event);
 
     // Get id and name from the body of the request
-    const id = 'comment-' + event.pathParameters.id;
+    const id = 'comment-' + event.pathParameters.comment_id;
     const theme_id = 'theme-' + event.pathParameters.theme_id;
 
     try {
