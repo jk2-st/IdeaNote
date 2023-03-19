@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCognitoAuth } from "./redux/cognitoAuthSlice";
 import { Auth } from 'aws-amplify';
 import { NavigationBar } from "./components/NavigationBar";
-
+import { redirect } from "react-router-dom";
 // let server = createServer();
 // server.get("/themes", [{ entity_id: "theme-1", title: "モックのタイトルです" },{ entity_id: "theme-2", title: "タイトル悩むね" }, { entity_id: "theme-3", title: "3番目だぜ" }]);
 // server.get("/comments/themes/1", [{ entity_id: "comment-1", comment: "コメントのモック" }, { entity_id: "comment-2", comment: "コメントその２"}]);
@@ -25,17 +25,19 @@ import { NavigationBar } from "./components/NavigationBar";
 function App({ signOut }) {
   const dispatch = useDispatch();
   const checkAuth = async () => {
-    try {
-      Auth.currentUserPoolUser()
-        .then(response => {
-          const token = response.signInUserSession.idToken.jwtToken;
-          dispatch(setCognitoAuth(token));
-        });
-    } catch (error) {
-      // 認証期限切れの場合はログイン画面にリダイレクトするなどの処理を行う
-      // 例えば、React Routerのhistory.push('/')を使用してログイン画面に遷移することができます。
-      await Auth.signOut();
-    }
+    Auth.currentUserPoolUser()
+      .then(response => {
+        const expire_timestamp = response.signInUserSession.idToken.payload.exp;
+        if (expire_timestamp < Date.now()/1000) throw new Error('認証の期限が切れています');
+        const token = response.signInUserSession.idToken.jwtToken;
+        dispatch(setCognitoAuth(token));
+      })
+      .catch(error => {
+        // 認証期限切れの場合はログイン画面にリダイレクトするなどの処理を行う
+        // 例えば、React Routerのhistory.push('/')を使用してログイン画面に遷移することができます。
+        Auth.signOut();
+        redirect('/');
+      });
   };
   useEffect(() => {
     checkAuth();
