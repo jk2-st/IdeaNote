@@ -14,6 +14,9 @@ export default function ButtonAppBar({ signOut }) {
   const handleDrawerToggle = () => {
     dispatch(toggle());
   };
+  const theme_list = useSelector((state) => state.themeList);
+  const theme_id = useSelector((state) => state.selectedTheme.id);
+  const selectedTheme = theme_list.find(element => element.id == theme_id);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -29,7 +32,7 @@ export default function ButtonAppBar({ signOut }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            ノートブック
+            {selectedTheme.title}
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
           <Button color="inherit" onClick={signOut}>Sign Out</Button>
