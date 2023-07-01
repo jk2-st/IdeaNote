@@ -16,8 +16,6 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const prTitle = context.payload.pull_request.title;
             const prefix = prTitle.split(':')[0];
-            console.log('title ' + prTitle);
-            console.log('prefix ' + prefix);
 
             switch (prefix){
               case 'feature':
