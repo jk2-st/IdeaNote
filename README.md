@@ -10,3 +10,6 @@ iphoneのリマインダーを使っていたが、TODOリストなので削除�
 ## アーキテクト構成図
 
 ![](./docs/picture/architecture.drawio.svg)
+
+## 開発ルール
+- [PRのタイトル](./docs/development/PR_rule.md)
