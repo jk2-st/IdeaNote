@@ -14,3 +14,23 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
+            const prTitle = context.payload.pull_request.title;
+            const prefix = prTitle.split(':')[0];
+
+            switch (prefix){
+              case 'feature':
+                setting_label = 'enhancement';
+                break;
+              case 'fix':
+                setting_label = 'bug';
+                break;
+              case default:
+                return;
+            }
+
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: [setting_label]
+            });
