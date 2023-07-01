@@ -15,9 +15,7 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
             const prTitle = context.payload.pull_request.title;
-            console.log('get branch name is ' + prTitle);
             const prefix = prTitle.split(':')[0];
-            console.log('prefix is ' + prefix);
 
             switch (prefix){
               case 'feature':
