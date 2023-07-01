@@ -14,11 +14,3 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-
-
-            await github.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              labels: ['bug']
-            });
