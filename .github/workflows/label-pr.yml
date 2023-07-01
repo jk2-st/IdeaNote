@@ -1,0 +1,36 @@
+name: Label pull_request
+on:
+  pull_request:
+    types:
+      - reopened
+      - opened
+jobs:
+  label_pull_request:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const prTitle = context.payload.pull_request.title;
+            const prefix = prTitle.split(':')[0];
+
+            switch (prefix){
+              case 'feature':
+                setting_label = 'enhancement';
+                break;
+              case 'fix':
+                setting_label = 'bug';
+                break;
+              default:
+                return;
+            }
+
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: [setting_label]
+            });
