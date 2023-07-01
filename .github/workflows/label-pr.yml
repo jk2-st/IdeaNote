@@ -14,17 +14,17 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-            const labelsToAdd = ['label1', 'label2']; // 追加するラベルを指定する
-            const prefix = $BRANCH_NAME.split(':')[0];
-            console.log('get branch name is ' + $({ github.event.pull_request.title });
+            const prTitle = context.payload.pull_request.title;
+            console.log('get branch name is ' + prTitle);
+            const prefix = prTitle.split(':')[0];
             console.log('prefix is ' + prefix);
 
             switch (prefix){
               case 'feature':
-                const setting_label = 'enhancement';
+                setting_label = 'enhancement';
                 break;
               case 'fix':
-                const setting_label = 'bug';
+                setting_label = 'bug';
                 break;
               case default:
                 return;
@@ -34,5 +34,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              labels: setting_label
+              labels: [setting_label]
             });
