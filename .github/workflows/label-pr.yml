@@ -10,34 +10,29 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Print branch name
-        env:
-          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-        run: echo $BRANCH_NAME
       - uses: actions/github-script@v6
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
             const labelsToAdd = ['label1', 'label2']; // 追加するラベルを指定する
             const prefix = $BRANCH_NAME.split(':')[0];
-            console.log('get branch name is ' + $BRANCH_NAME);
+            console.log('get branch name is ' + $({ github.event.pull_request.title });
             console.log('prefix is ' + prefix);
 
             switch (prefix){
               case 'feature':
-                const label = 'enhancement';
+                const setting_label = 'enhancement';
                 break;
               case 'fix':
-                const label = 'bug';
+                const setting_label = 'bug';
                 break;
               case default:
                 return;
-                break;
             }
 
             await github.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              labels: label
+              labels: setting_label
             });
